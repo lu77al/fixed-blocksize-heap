@@ -44,20 +44,22 @@ void HeapFast::free(void* p)
 void* HeapFast::tryAllocate()
 {
 	if (freeSpace == 0) return nullptr;
-	if (*next != EMPTY) {
-		char *pos = (char*)memchr(status, EMPTY, capacity);
-		if (pos == nullptr) {
-			freeSpace = 0;
-			return nullptr;
-		}
-		next = pos;
+	char* pos;
+	if (initCnt < capacity)
+	{
+		pos = &status[initCnt];
+		initCnt++;
 	}
-	void* result = buffer + (next - status) * blockSize;
+	else
+	{
+		if (stackHead < stack) return nullptr;
+		pos = *stackHead;
+		stackHead--;
+	}
+	if (*pos != EMPTY)  return nullptr;
 	freeSpace--;
-	*next = OCCUPIED;
-	next++;
-	if (next >= buffer) next = status;
-	return result;
+	*pos = OCCUPIED;
+	return buffer + (pos - status) * blockSize;
 }
 
 int HeapFast::tryFree(void* p)
