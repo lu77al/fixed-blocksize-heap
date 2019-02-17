@@ -71,9 +71,10 @@ int HeapFast::tryFree(void* p)
 	if (index >= capacity) return 3;
 	if (index * blockSize != ptr) return 4;
 	if (status[index] == EMPTY) return 5;
+	if (stackHead >= stack + capacity) return 6;
 	freeSpace++;
 	status[index] = EMPTY;
-	if (*next != EMPTY) next = &status[index];
+	stackHead++;
+	*stackHead = &status[index];
 	return 0;
 }
-*/
