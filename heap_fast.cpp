@@ -10,14 +10,14 @@ HeapFast::HeapFast(void* memory, size_t memorySize, size_t blockSize)
 	freeSpace = capacity = 0;     // Default values for "bad" object
 	size_t alignedSize = ((blockSize + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT; // Block size considering alignment
 	size_t deltaSize = alignedSize - blockSize;	// delta to let last block have size = actualSize 
-	capacity = (memorySize + deltaSize) / (blockSize + 1 + sizeof(char*)) + 1;
+	capacity = (memorySize + deltaSize) / (alignedSize + 1 + sizeof(char*)) + 1;
 	size_t stateSize, stackSize, bufferSize;
 	do {
 		capacity--;
 		if (capacity == 0) return;
 		stateSize = ((capacity + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT;
 		stackSize = ((capacity * sizeof(char*) + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT;
-		bufferSize = capacity * blockSize - deltaSize;
+		bufferSize = capacity * alignedSize - deltaSize;
 	} while ((stateSize + stackSize + bufferSize) > memorySize);
 	status = (char*)memory;
 	stack = (char**)(status + stateSize);
