@@ -14,14 +14,13 @@ Heap::Heap(void* memory, size_t memorySize, size_t blockSize)
 {
 	freeSpace = capacity = 0;     // Default values for "bad" object
 	if (blockSize == 0) return;
-	size_t actualSize = blockSize;
-	blockSize = ((blockSize + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT; // Block size considering alignment
-	size_t deltaSize = blockSize - actualSize;	// delta to let last block have size = actualSize 
-	this->blockSize = blockSize;
-	capacity = (memorySize + deltaSize) / (blockSize + 1); // Capacity (first iteration) 
+	size_t alignedSize = ((blockSize + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT; // Block size considering alignment
+	size_t deltaSize = alignedSize - blockSize;	// delta to let last block have size = actualSize 
+	this->blockSize = alignedSize;
+	capacity = (memorySize + deltaSize) / (alignedSize + 1); // Capacity (first optimistic iteration) 
 	if (capacity == 0) return;
 	size_t bufferOffset = ((capacity + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT; // Offset of first block considering alignment
-	capacity = bufferOffset < memorySize ? (memorySize + deltaSize - bufferOffset) / blockSize : 0; // Capacity considering alignment
+	capacity = bufferOffset < memorySize ? (memorySize + deltaSize - bufferOffset) / alignedSize : 0; // Capacity considering alignment
 	if (capacity == 0) return;
 	freeSpace = capacity;
 	next = status = (char*)memory;
