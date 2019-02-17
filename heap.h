@@ -3,12 +3,12 @@
 
 class Heap
 {
-	char* status;
-	char* buffer;
-	size_t blockSize;
-	size_t capacity;
-	size_t freeSpace;
-	char* next;
+	char* status; // status table 1 byte per cell (EMPTY / OCCUPIED). Placed at start of pre-allocted region
+	char* buffer; // buffer with allocated blocks
+	size_t blockSize; // block size considering alignment
+	size_t capacity;  // total cells count (maximum blocks available)
+	size_t freeSpace; // empty cells count 
+	char* next; // pointer (inside status table) to allocate next block
 
 	void* tryAllocate();
 	int tryFree(void* p);
