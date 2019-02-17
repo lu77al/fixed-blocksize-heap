@@ -13,6 +13,18 @@ Heap::Heap(void* memory, size_t memorySize, size_t blockSize)
 
 void* Heap::allocate()
 {
+	void* result = tryAllocate();
+	if (result == nullptr) throw "Not enough space to allocate block";
+	return result;
+}
+
+void Heap::free(void* p)
+{
+	if (tryFree(p) != 0) throw "Can't free block at this address";
+}
+
+void* Heap::tryAllocate()
+{
 	if (freeSpace == 0) return nullptr;
 	char* pos = (char*)memchr(status, 0, capacity);
 	if (pos == nullptr) return nullptr;
@@ -21,15 +33,16 @@ void* Heap::allocate()
 	return buffer + (pos - status) * blockSize;
 }
 
-void Heap::free(void* p)
+int Heap::tryFree(void* p)
 {
-	if (freeSpace == capacity) return;
-	if (p < buffer) return;
+	if (freeSpace == capacity) return 1;
+	if (p < buffer) return 2;
 	size_t ptr = (char*)p - buffer;
 	size_t index = ptr / blockSize;
-	if (index >= capacity) return;
-	if (index * blockSize != ptr) return;
-	if (status[index] == 0) return;
+	if (index >= capacity) return 3;
+	if (index * blockSize != ptr) return 4;
+	if (status[index] == 0) return 5;
 	freeSpace++;
 	status[index] = 0;
+	return 0;
 }
