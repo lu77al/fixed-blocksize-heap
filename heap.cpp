@@ -23,4 +23,13 @@ void* Heap::allocate()
 
 void Heap::free(void* p)
 {
+	if (freeSpace == capacity) return;
+	if (p < buffer) return;
+	size_t ptr = (char*)p - buffer;
+	size_t index = ptr / blockSize;
+	if (index >= capacity) return;
+	if (index * blockSize != ptr) return;
+	if (status[index] == 0) return;
+	freeSpace++;
+	status[index] = 0;
 }
