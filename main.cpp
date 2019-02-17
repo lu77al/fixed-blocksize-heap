@@ -130,6 +130,8 @@ void testHeapFast(void)
 
 void testHeap(void)
 {
+	#undef REGION_SIZE
+	#undef BLOCK_SIZE
 	#define REGION_SIZE 207
 	#define BLOCK_SIZE 15
 
