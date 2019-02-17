@@ -1,4 +1,5 @@
 #include "heap.h"
+#include "heap_fast.h"
 #include <iostream>
 #include <cstring>
 
@@ -18,7 +19,8 @@ int main(void)
 	showDump("dump: ", mem, 15);
 	try {
 		cout << "\n2. Create instance of Heap 200 / 15 bytes\n";
-		Heap heap(mem, 200, 15);
+		HeapFast heap(mem, 200, 15);
+//		Heap heap(mem, 200, 15);
 		showDump("dump: ", mem, 15);
 		cout << "\n3. Allocate 12 blocks\n";
 		char* obj[12];
@@ -62,7 +64,7 @@ int main(void)
 			throw 1;
 		}
 		catch (const char* msg) {
-			cout << "Expected exceprion Ok: " << msg << endl;
+			cout << "Expected exception Ok: " << msg << endl;
 		}
 		cout << "\n9. Free with incorrect alignment\n";
 		try {
@@ -70,7 +72,7 @@ int main(void)
 			throw 1;
 		}
 		catch (const char* msg) {
-			cout << "Expected exceprion Ok: " << msg << endl;
+			cout << "Expected exception Ok: " << msg << endl;
 		}
 		showDump("Status is the same: ", mem, 15);
 		cout << "\n10. Reallocate obj[5], obj[11], obj[2], obj[6]\n";
