@@ -10,17 +10,20 @@ using std::endl;
 void showDump(const char* header, const char* p, int n);
 void showOffset(char* p[], char* base, int n);
 
+#define REGION_SIZE 207
+#define BLOCK_SIZE 15
+
 int main(void)
 {
 	cout << "=== Heap class demo / test ===\n";
 	cout << "\n1. Prepare guineapig memory region\n";
-	char* mem = new char[200];
-	memset(mem, 7, 200);
+	char* mem = new char[REGION_SIZE];
+	memset(mem, 7, REGION_SIZE);
 	showDump("dump: ", mem, 15);
 	try {
-		cout << "\n2. Create instance of Heap 200 / 15 bytes\n";
-		HeapFast heap(mem, 200, 15);
-//		Heap heap(mem, 200, 15);
+		cout << "\n2. Create instance of Heap " << REGION_SIZE << " / 15 bytes\n";
+//		HeapFast heap(mem, REGION_SIZE, 15);
+		Heap heap(mem, REGION_SIZE, BLOCK_SIZE);
 		showDump("dump: ", mem, 15);
 		cout << "\n3. Allocate 12 blocks\n";
 		char* obj[12];
@@ -93,6 +96,8 @@ int main(void)
 	} catch (const int msg) {
 		cout << "\nERROR!!! Exception was expected\n";
 	}
+
+	cout << "\n*** Ok, no unexpected exceptions were thrown ***\n";
 
 	delete[] mem;
 	cin.get();

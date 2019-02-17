@@ -3,14 +3,24 @@
 
 #define EMPTY 0
 #define OCCUPIED 1
+#define ALIGNMENT 8
 
 Heap::Heap(void* memory, size_t memorySize, size_t blockSize)
 {
+	freeSpace = capacity = 0;
+	if (blockSize == 0) return;
+	size_t actualSize = blockSize;
+	blockSize = ((blockSize + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT;
+	size_t deltaSize = blockSize - actualSize;
 	this->blockSize = blockSize;
-	next = status = (char*)memory;
-	freeSpace = capacity = memorySize / (blockSize + 1);
+	capacity = (memorySize + deltaSize) / (blockSize + 1);
 	if (capacity == 0) return;
-	buffer = status + capacity;
+	size_t bufferOffset = ((capacity + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT;
+	capacity = bufferOffset < memorySize ? (memorySize + deltaSize - bufferOffset) / blockSize : 0;
+	if (capacity == 0) return;
+	freeSpace = capacity;
+	next = status = (char*)memory;
+	buffer = status + bufferOffset;
 	memset(status, EMPTY, capacity);
 }
 
@@ -41,7 +51,7 @@ void* Heap::tryAllocate()
 	freeSpace--;
 	*next = OCCUPIED;
 	next++;
-	if (next >= buffer) next = status;
+	if (next >= status + capacity) next = status;
 	return result;
 }
 
