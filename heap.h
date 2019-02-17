@@ -8,6 +8,8 @@ class Heap
 	size_t blockSize;
 	size_t capacity;
 	size_t freeSpace;
+	char* next;
+
 	void* tryAllocate();
 	int tryFree(void* p);
 public:

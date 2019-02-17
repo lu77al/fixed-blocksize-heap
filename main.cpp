@@ -33,7 +33,7 @@ int main(void)
 			heap.allocate();
 			throw 1;
 		} catch (const char* msg) {
-			cout << "Expected exceprion Ok: " << msg << endl;
+			cout << "Expected exception Ok: " << msg << endl;
 		}
 		cout << "\n5. Free obj[5], obj[11], obj[2], obj[6]\n";
 		heap.free(obj[5]);
@@ -46,7 +46,7 @@ int main(void)
 			heap.free(obj[2]);
 			throw 1;
 		} catch (const char* msg) {
-			cout << "Expected exceprion Ok: " << msg << endl;
+			cout << "Expected exception Ok: " << msg << endl;
 		}
 		cout << "\n7. Free before memory region\n";
 		try {
@@ -54,7 +54,7 @@ int main(void)
 			throw 1;
 		}
 		catch (const char* msg) {
-			cout << "Expected exceprion Ok: " << msg << endl;
+			cout << "Expected exception Ok: " << msg << endl;
 		}
 		cout << "\n8. Free after memory region\n";
 		try {

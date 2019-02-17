@@ -1,14 +1,17 @@
 #include "heap.h"
 #include <cstring>
 
+#define EMPTY 0
+#define OCCUPIED 1
+
 Heap::Heap(void* memory, size_t memorySize, size_t blockSize)
 {
 	this->blockSize = blockSize;
-	status = (char*)memory;
+	next = status = (char*)memory;
 	freeSpace = capacity = memorySize / (blockSize + 1);
 	if (capacity == 0) return;
 	buffer = status + capacity;
-	memset(status, 0, capacity);
+	memset(status, EMPTY, capacity);
 }
 
 void* Heap::allocate()
@@ -26,11 +29,20 @@ void Heap::free(void* p)
 void* Heap::tryAllocate()
 {
 	if (freeSpace == 0) return nullptr;
-	char* pos = (char*)memchr(status, 0, capacity);
-	if (pos == nullptr) return nullptr;
+	if (*next != EMPTY) {
+		char *pos = (char*)memchr(status, EMPTY, capacity);
+		if (pos == nullptr) {
+			freeSpace = 0;
+			return nullptr;
+		}
+		next = pos;
+	}
+	void* result = buffer + (next - status) * blockSize;
 	freeSpace--;
-	*pos = 1;
-	return buffer + (pos - status) * blockSize;
+	*next = OCCUPIED;
+	next++;
+	if (next >= buffer) next = status;
+	return result;
 }
 
 int Heap::tryFree(void* p)
@@ -41,8 +53,9 @@ int Heap::tryFree(void* p)
 	size_t index = ptr / blockSize;
 	if (index >= capacity) return 3;
 	if (index * blockSize != ptr) return 4;
-	if (status[index] == 0) return 5;
+	if (status[index] == EMPTY) return 5;
 	freeSpace++;
-	status[index] = 0;
+	status[index] = EMPTY;
+	if (*next != EMPTY) next = &status[index];
 	return 0;
 }
