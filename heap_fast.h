@@ -3,13 +3,13 @@
 
 class HeapFast
 {
-	char* status;
-	char** stack;
-	char** stackHead;
-	char* buffer;
-	size_t blockSize;
-	size_t capacity;
-	size_t initCnt;
+	char* status; // status table 1 byte per cell (EMPTY / OCCUPIED). Placed at start of pre-allocted region
+	char** stack; // stack containing pointers to status table cells after free(). To get rid of search for empty cell. Placed after status table
+	char** stackHead; 
+	char* buffer; // buffer with allocated blocks
+	size_t blockSize; // block size considering alignment
+	size_t capacity;  // total cells count (maximum blocks available)
+	size_t initCnt;   // coutnter of initial allocations
 	size_t freeSpace; // empty cells count 
 	
 	void* tryAllocate();

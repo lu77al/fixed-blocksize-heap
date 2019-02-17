@@ -27,17 +27,17 @@ void testHeapFast(void)
 	cout << "\n1. Prepare guineapig memory region\n";
 	char* mem = new char[REGION_SIZE];
 	memset(mem, 7, REGION_SIZE);
-	showDump("dump: ", mem, 19);
+	showDump("dump: ", mem, 15);
 	try {
 		cout << "\n2. Create instance of Heap " << REGION_SIZE << " / 15 bytes\n";
 		HeapFast heap(mem, REGION_SIZE, BLOCK_SIZE);
-		showDump("dump: ", mem, 19);
+		showDump("dump: ", mem, 15);
 		cout << "\n3. Allocate 12 blocks\n";
 		char* obj[12];
 		for (int i = 0; i < 12; i++)
 		{
 			obj[i] = (char*)heap.allocate();
-			showDump("alloction: ", mem, 19);
+			showDump("alloction: ", mem, 15);
 		}
 		showOffset(obj, mem, 12);
 		cout << "\n4. Try to allocate more\n";
@@ -54,7 +54,7 @@ void testHeapFast(void)
 		heap.free(obj[11]);
 		heap.free(obj[2]);
 		heap.free(obj[6]);
-		showDump("Status after free: ", mem, 19);
+		showDump("Status after free: ", mem, 15);
 		cout << "\n6. Free the same twice\n";
 		try {
 			heap.free(obj[2]);
@@ -91,25 +91,25 @@ void testHeapFast(void)
 		{
 			cout << "Expected exception Ok: " << msg << endl;
 		}
-		showDump("Status is the same: ", mem, 19);
+		showDump("Status is the same: ", mem, 15);
 		cout << "\n10. Reallocate obj[6], obj[2], obj[11], obj[5]\n";
 		obj[6] = (char*)heap.allocate();
 		obj[2] = (char*)heap.allocate();
 		obj[11] = (char*)heap.allocate();
 		obj[5] = (char*)heap.allocate();
-		showDump("Status: ", mem, 19);
+		showDump("Status: ", mem, 15);
 		showOffset(obj, mem, 12);
 		cout << "\n11. Free them all\n";
 		for (int i = 0; i < 12; i++)
 		{
 			heap.free(obj[i]);
-			showDump("Free: ", mem, 19);
+			showDump("Free: ", mem, 15);
 		}
 		cout << "\n12. Locate all again\n";
 		for (int i = 0; i < 12; i++)
 		{
 			obj[i] = (char*)heap.allocate();
-			showDump("alloction: ", mem, 19);
+			showDump("allocation: ", mem, 15);
 		}
 		showOffset(obj, mem, 12);
 	}
