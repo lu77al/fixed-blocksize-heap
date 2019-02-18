@@ -28,7 +28,6 @@ void testHeapFast(void)
 	char* mem = new char[REGION_SIZE];
 	memset(mem, 7, REGION_SIZE);
 	showDump("dump: ", mem, 15);
-	bool allOk = false;
 	try {
 		cout << "\n2. Create instance of Heap " << REGION_SIZE << " / 15 bytes\n";
 		HeapFast heap(mem, REGION_SIZE, BLOCK_SIZE);
@@ -112,7 +111,7 @@ void testHeapFast(void)
 			obj[i] = (char*)heap.allocate();
 			showDump("allocation: ", mem, 15);
 		}
-		allOk = true;
+		cout << "\n*** Ok, no unexpected exceptions were thrown ***\n";
 	}
 	catch (const char* msg)
 	{
@@ -122,7 +121,6 @@ void testHeapFast(void)
 	{
 		cout << "\nERROR!!! Exception was expected\n";
 	}
-	if (allOk) cout << "\n*** Ok, no unexpected exceptions were thrown ***\n";
 	delete[] mem;
 	cin.get();
 }
@@ -139,7 +137,6 @@ void testHeap(void)
 	char* mem = new char[REGION_SIZE];
 	memset(mem, 7, REGION_SIZE);
 	showDump("dump: ", mem, 15);
-	bool allOk = false;
 	try {
 		cout << "\n2. Create instance of Heap " << REGION_SIZE << " / 15 bytes\n";
 		Heap heap(mem, REGION_SIZE, BLOCK_SIZE);
@@ -217,7 +214,7 @@ void testHeap(void)
 			heap.free(obj[i]);
 			showDump("Free: ", mem, 15);
 		}
-		allOk = true;
+		cout << "\n*** Ok, no unexpected exceptions were thrown ***\n";
 	}
 	catch (const char* msg)
 	{
@@ -227,7 +224,6 @@ void testHeap(void)
 	{
 		cout << "\nERROR!!! Exception was expected\n";
 	}
-	if (allOk) cout << "\n*** Ok, no unexpected exceptions were thrown ***\n";
 	delete[] mem;
 	cin.get();
 }
